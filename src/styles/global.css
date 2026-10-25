@@ -1,0 +1,407 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens — the only place colours and fonts are defined.
+ * Tailwind turns each one into utilities, e.g. bg-brand, text-ink, font-display.
+ */
+@theme {
+  /* AV orange (from the logo) */
+  --color-brand: #f58a07;
+  --color-brand-light: #ffa53a;
+  --color-brand-dark: #c96f00;
+
+  /* Deep navy / near-black for the cinematic sections */
+  --color-ink: #0b1220;
+  --color-ink-soft: #131d30;
+  --color-navy: #192c45;
+
+  /* Light sections */
+  --color-paper: #ffffff;
+  --color-mist: #f4f2ee;
+
+  /* Warm near-black of film stock — used for the film strip on project pages */
+  --color-film: #0b0906;
+
+  /* Text greys */
+  --color-muted: #6b7280;
+  --color-muted-dark: #9aa3b2;
+
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Rounded "sheet" sections, as in the design reference */
+  --radius-sheet: 2rem;
+
+  /* Motion — used as animate-rec, animate-kenburns, animate-point, animate-progress, animate-fade-in */
+  --animate-rec: rec 1.2s steps(1, end) infinite;
+  --animate-kenburns: kenburns 6s ease-out forwards;
+  --animate-point: point 2.4s ease-in-out infinite;
+  --animate-progress: progress linear infinite;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-sweep: sweep 0.9s linear forwards;
+  --animate-clap: clap 0.35s ease-out 0.15s;
+
+  @keyframes clap {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes sweep {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rec {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1.12) translate(1.5%, 1%);
+    }
+    to {
+      transform: scale(1) translate(0, 0);
+    }
+  }
+
+  @keyframes point {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(6px, -6px) rotate(-6deg);
+    }
+  }
+
+  @keyframes progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    @apply bg-brand text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+}
+
+/* Visitors who turn off animations get a still, readable page */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Camera-iris page transition (View Transitions API; links opt in via components/ui/TransitionLink).
+ * The new page is revealed through a hexagonal aperture that opens from the centre while twisting,
+ * like lens blades; the old page darkens and recedes behind it.
+ */
+::view-transition-old(root) {
+  animation: iris-recede 650ms cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: iris-open 650ms cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+
+/* The header stays put while the page changes beneath it */
+::view-transition-group(site-header) {
+  z-index: 10;
+}
+
+@keyframes iris-recede {
+  to {
+    transform: scale(0.94);
+    filter: brightness(0.3);
+  }
+}
+
+@keyframes iris-open {
+  from {
+    clip-path: polygon(
+      calc(50% + 1.7vmax) calc(50% - 1vmax),
+      calc(50% + 1.7vmax) calc(50% + 1vmax),
+      50% calc(50% + 2vmax),
+      calc(50% - 1.7vmax) calc(50% + 1vmax),
+      calc(50% - 1.7vmax) calc(50% - 1vmax),
+      50% calc(50% - 2vmax)
+    );
+  }
+  to {
+    clip-path: polygon(
+      calc(50% + 120vmax) 50%,
+      calc(50% + 60vmax) calc(50% + 104vmax),
+      calc(50% - 60vmax) calc(50% + 104vmax),
+      calc(50% - 120vmax) 50%,
+      calc(50% - 60vmax) calc(50% - 104vmax),
+      calc(50% + 60vmax) calc(50% - 104vmax)
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* Viewfinder cursor (components/layout/ViewfinderCursor): hide the native cursor where the reticle takes over */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-cursor],
+  [data-cursor] * {
+    cursor: none;
+  }
+}
+
+/*
+ * Map draw-in (components/media/AnimatedMap), scrubbed by the section's scroll progress --draw (0–1):
+ * borders trace over 0 → 0.35, the land fills over 0.25 → 0.45, Kenya floods orange over 0.4 → 0.55.
+ * Scrolling back reverses it. Without --draw everything shows fully drawn.
+ */
+.map-draw path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - clamp(0, var(--draw, 1) / 0.35, 1));
+}
+.map-draw .map-land {
+  fill-opacity: clamp(0, (var(--draw, 1) - 0.25) / 0.2, 1);
+}
+.map-draw .map-kenya {
+  fill-opacity: clamp(0, (var(--draw, 1) - 0.4) / 0.15, 1);
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--color-brand) 60%, transparent));
+}
+
+/* Short screens: pinned panels are switched off, so show the "Made in Nairobi" drawings complete */
+@media (max-height: 620px) {
+  .place-scrub {
+    --draw: 1 !important;
+  }
+}
+
+/*
+ * Projector reel (components/sections/FilmFlow). The strip's three branches are tagged
+ * .reel-shared / .reel-picture / .reel-sound; [data-branch] on the stage dims the branch not chosen.
+ * Each new frame on the screen comes in with a projector flicker, and its icon traces itself.
+ */
+.reel-stage .reel-picture,
+.reel-stage .reel-sound,
+.reel-stage [data-frame-branch] {
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reel-stage[data-branch='picture'] .reel-sound,
+.reel-stage[data-branch='sound'] .reel-picture,
+.reel-stage[data-branch='picture'] [data-frame-branch='sound'],
+.reel-stage[data-branch='sound'] [data-frame-branch='picture'] {
+  opacity: 0.22;
+}
+
+.projector-in {
+  animation: projector-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes projector-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-4%);
+    filter: brightness(2.2) blur(3px);
+  }
+  18% {
+    opacity: 0.85;
+  }
+  26% {
+    opacity: 0.35;
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: brightness(1) blur(0);
+  }
+}
+
+.trace-in {
+  stroke-dasharray: 1;
+  animation: trace-in 1.1s cubic-bezier(0.65, 0, 0.35, 1) 0.15s both;
+}
+@keyframes trace-in {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* The light from the frame: a soft flicker while the projector runs */
+.projector-beam {
+  animation: beam-flicker 3.2s steps(12, end) infinite;
+}
+@keyframes beam-flicker {
+  0%, 100% { opacity: 1; }
+  30% { opacity: 0.86; }
+  55% { opacity: 0.95; }
+  80% { opacity: 0.82; }
+}
+
+/* Split frame (components/media/SplitFrame): a slow playhead running across the sound side */
+@keyframes playhead {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}
+
+/* Client logo strip (components/sections/ClientsSection): two copies of the row, slid by one copy's width */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Vision mixer (components/sections/WorkSection): the flash of a hard cut to program */
+@keyframes cut-flash {
+  from {
+    opacity: 0.45;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/*
+ * Pointer spotlight on dark sections (add the class "spotlight"; components/layout/Spotlight moves it).
+ * A warm brand glow drawn in the section's own background — under its content, so it never tints
+ * photos or text. --mx / --my place it; --spot (0–1) fades it in and out as the pointer arrives and leaves.
+ */
+@property --spot {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+.spotlight {
+  background-image: radial-gradient(circle 32rem at var(--mx, 50%) var(--my, 50%), rgb(245 138 7 / calc(var(--spot) * 0.16)), transparent 70%);
+  transition: --spot 0.6s ease;
+}
+
+/*
+ * Footer wordmark (components/layout/Footer): an outlined "AV PRODUCTIONS" whose orange fill shows
+ * only where the light is. --wx / --wy place the light on the wordmark, --wr is its size (0 = off).
+ * With a mouse the footer moves it; without one it sweeps across on its own (.wordmark-sweep).
+ */
+@property --wx {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+@property --wy {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+@property --wr {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+.wordmark-light {
+  mask-image: radial-gradient(circle var(--wr) at var(--wx) var(--wy), #000 35%, transparent 100%);
+}
+.wordmark {
+  transition: --wr 0.6s ease;
+}
+.wordmark-sweep {
+  --wy: 50%;
+  --wr: 9rem;
+  animation: wordmark-sweep 9s ease-in-out infinite alternate;
+}
+@keyframes wordmark-sweep {
+  from {
+    --wx: -10%;
+  }
+  to {
+    --wx: 110%;
+  }
+}
+/* No motion: the wordmark simply shows filled */
+@media (prefers-reduced-motion: reduce) {
+  .wordmark-light {
+    mask-image: none;
+  }
+}
+
+/* Hero (components/sections/HeroSection): the waveform under "Sound" — each bar breathes at its own pace */
+@keyframes wave {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}

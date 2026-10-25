@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>AV Productions — Film & Sound Studio</title>
+    <meta name="description" content="AV Productions is a film and sound studio making commercials, music videos and stories that move people." />
+    <meta property="og:title" content="AV Productions — Film & Sound Studio" />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0b1220" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!--
+      Static copy of the contact form so Netlify Forms detects it at deploy time.
+      The real form is rendered by React (src/components/sections/ContactScene.tsx, fields in src/content/contact.ts);
+      keep the field names in sync.
+    -->
+    <form name="contact-script" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="bot-field" />
+      <input type="text" name="name" />
+      <input type="text" name="type" />
+      <input type="text" name="date" />
+      <input type="text" name="location" />
+      <input type="text" name="budget" />
+      <input type="text" name="idea" />
+      <input type="email" name="email" />
+    </form>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
