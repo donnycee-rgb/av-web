@@ -1,8 +1,11 @@
 import { Link } from '@/components/ui/TransitionLink';
+import { withMark, type Mark } from '@/components/ui/DirectorMark';
 
 interface SectionHeadingProps {
   eyebrow: string;
   title: string;
+  /** Optional hand-drawn mark on one word of the title */
+  mark?: Mark;
   body?: string;
   link?: { label: string; to: string };
   /** Text colours for dark or light backgrounds */
@@ -11,13 +14,13 @@ interface SectionHeadingProps {
 }
 
 /** Small label, serif title, optional line of text and an arrow link. */
-export function SectionHeading({ eyebrow, title, body, link, onDark = false, className = '' }: SectionHeadingProps) {
+export function SectionHeading({ eyebrow, title, mark, body, link, onDark = false, className = '' }: SectionHeadingProps) {
   return (
     <div className={className}>
       <p className={`mb-4 text-xs font-semibold uppercase tracking-[0.25em] ${onDark ? 'text-brand' : 'text-brand-dark'}`}>
         {eyebrow}
       </p>
-      <h2 className="text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{title}</h2>
+      <h2 className="text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">{withMark(title, mark)}</h2>
       {body && <p className={`mt-5 max-w-md text-base sm:text-lg ${onDark ? 'text-white/70' : 'text-muted'}`}>{body}</p>}
       {link && (
         <Link

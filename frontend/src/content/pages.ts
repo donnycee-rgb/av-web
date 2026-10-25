@@ -27,6 +27,7 @@ export const pages = {
   studio: {
     eyebrow: 'Studio',
     title: 'Image and sound, treated as equals.',
+    mark: { word: 'equals', type: 'underline' },
     intro: 'A small team that takes a project from first idea to final master.',
   },
   notFound: {

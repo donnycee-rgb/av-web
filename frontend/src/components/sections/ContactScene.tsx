@@ -5,6 +5,7 @@ import { submitNetlifyForm } from '@/lib/netlifyForm';
 import { Container } from '@/components/ui/Container';
 import { ScriptBlank } from '@/components/forms/ScriptBlank';
 import { Clapperboard } from '@/components/media/Clapperboard';
+import { DirectorMark } from '@/components/ui/DirectorMark';
 
 const FORM_NAME = 'contact-script';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -89,7 +90,11 @@ export function ContactScene() {
           {sent ? (
             <div role="status" className="animate-fade-in">
               <p className="font-display text-4xl italic text-paper sm:text-5xl">{contact.success.kicker}</p>
-              <h1 className="mt-2 text-7xl leading-none sm:text-9xl">{contact.success.title}</h1>
+              <h1 className="mt-2 text-7xl leading-none sm:text-9xl">
+                <DirectorMark type="circle" colorClass="text-paper" delay={450}>
+                  {contact.success.title}
+                </DirectorMark>
+              </h1>
               <p className="mt-8 max-w-lg text-lg">{contact.success.body(values.name.trim())}</p>
               {!delivered && <p className="mt-4 max-w-lg text-sm text-ink/60">{contact.success.devNote}</p>}
               <button type="button" onClick={reset} className="mt-8 font-semibold underline underline-offset-4 hover:text-paper">

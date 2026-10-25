@@ -27,7 +27,7 @@ export function PlaceSection() {
           />
 
           <div className="relative md:order-1">
-            <SectionHeading eyebrow={place.eyebrow} title={place.title} onDark />
+            <SectionHeading eyebrow={place.eyebrow} title={place.title} mark={place.mark} onDark />
             <p className="mt-3 font-display text-2xl italic text-brand sm:text-3xl">{place.subtitle}</p>
             <p className="mt-5 max-w-md text-white/70 sm:text-lg">{place.body}</p>
             <Link

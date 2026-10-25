@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
@@ -8,8 +8,9 @@ export function SiteLayout() {
   const { pathname } = useLocation();
 
   // Start each new page at the top — instantly, overriding the site's smooth scrolling
-  // (which is meant for in-page links, not for jumping across a newly loaded page)
-  useEffect(() => {
+  // (meant for in-page links). Layout effect so it happens before the iris transition
+  // captures the new page; a normal effect would let it open on the old scroll position.
+  useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [pathname]);
 

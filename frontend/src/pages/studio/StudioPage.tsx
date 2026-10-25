@@ -7,11 +7,11 @@ import { ClosingCta } from '@/components/sections/ClosingCta';
 
 /** Studio: the process as a signal-flow diagram, then milestones. */
 export function StudioPage() {
-  const { eyebrow, title, intro } = pages.studio;
+  const { eyebrow, title, intro, mark } = pages.studio;
   useDocumentTitle('Studio');
   return (
     <>
-      <PageIntro eyebrow={eyebrow} title={title} intro={intro} />
+      <PageIntro eyebrow={eyebrow} title={title} intro={intro} mark={mark} />
       <SignalFlow />
       <Milestones />
       <ClosingCta />

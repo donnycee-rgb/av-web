@@ -5,6 +5,7 @@ import { StackPanel } from '@/components/ui/StackPanel';
 import { Button } from '@/components/ui/Button';
 import { ViewfinderCard } from '@/components/media/ViewfinderCard';
 import { ReelPlayer } from '@/components/media/ReelPlayer';
+import { DirectorMark } from '@/components/ui/DirectorMark';
 
 const stills = projects.map((p) => p.image);
 // Each card cycles through its own set of stills
@@ -53,7 +54,15 @@ export function HeroSection() {
             {hero.lines.map((line, i) => (
               <span key={line.word} className="flex items-baseline gap-3 sm:gap-5">
                 <span className="text-3xl text-white/90 sm:text-5xl">{line.lead}</span>
-                <span className={`text-6xl sm:text-8xl lg:text-9xl ${i === 1 ? 'text-white' : 'text-ink'}`}>{line.word}</span>
+                <span className={`text-6xl sm:text-8xl lg:text-9xl ${i === 1 ? 'text-white' : 'text-ink'}`}>
+                  {'mark' in line && line.mark ? (
+                    <DirectorMark type="circle" colorClass="text-paper" delay={700}>
+                      {line.word}
+                    </DirectorMark>
+                  ) : (
+                    line.word
+                  )}
+                </span>
               </span>
             ))}
           </h1>

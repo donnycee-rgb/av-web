@@ -5,7 +5,8 @@ export const home = {
     lines: [
       { lead: 'We', word: 'Frame' },
       { lead: 'We', word: 'Sound' },
-      { lead: 'We tell', word: 'Stories' },
+      // `mark: true` circles the word with a hand-drawn stroke
+      { lead: 'We tell', word: 'Stories', mark: true },
     ],
     intro: 'A film and sound studio making commercials, music videos and stories that move people.',
     primary: { label: 'See our work', to: '/work' },
@@ -15,6 +16,7 @@ export const home = {
   place: {
     eyebrow: 'Where we work',
     title: 'Made in Nairobi.',
+    mark: { word: 'Nairobi', type: 'underline' },
     subtitle: 'Filmed across Kenya — and beyond.',
     body: 'Our perspective is shaped by the energy and stories of home. We bring it to every frame, from city streets to the coast.',
     link: { label: 'Our story', to: '/studio' },
