@@ -12,15 +12,19 @@ const FINE_POINTER = '(hover: hover) and (pointer: fine)';
 /** How long each review shows before the next one comes up (hovering or tapping restarts the count) */
 const REVIEW_MS = 6000;
 
-/** A client's logo in one colour (white), or its name as a stand-in until the logo file arrives */
+/** A client's logo (white, or in its own colours), or its name as a stand-in when there's no logo file */
 function ClientMark({ client, hidden = false }: { client: Client; hidden?: boolean }) {
   return (
-    <li aria-hidden={hidden || undefined} className="flex h-10 shrink-0 items-center px-8 sm:px-10">
+    <li aria-hidden={hidden || undefined} className="flex h-14 shrink-0 items-center px-8 sm:h-16 sm:px-12">
       {client.logo ? (
+        // Wordmarks turn white; emblems keep their own colours, a touch muted until hovered
         <img
           src={client.logo}
           alt={hidden ? '' : client.name}
-          className="max-h-8 w-auto opacity-50 transition-opacity duration-300 [filter:brightness(0)_invert(1)] hover:opacity-100"
+          loading="lazy"
+          className={`w-auto transition-opacity duration-300 hover:opacity-100 ${
+            client.tone === 'colour' ? 'h-12 opacity-80 sm:h-14' : 'h-10 opacity-75 [filter:brightness(0)_invert(1)] sm:h-11'
+          }`}
         />
       ) : (
         <span className="whitespace-nowrap font-display text-lg italic text-white/45 transition-colors duration-300 hover:text-white">{client.name}</span>
@@ -123,8 +127,11 @@ export function ClientsSection() {
             </ul>
           ) : (
             <ul className="flex w-max animate-[marquee_40s_linear_infinite] hover:[animation-play-state:paused]">
+              {/* Each half holds the list twice, so even a short list fills very wide screens without a gap */}
               {[false, true].map((copyOfRow) =>
-                clients.map((client) => <ClientMark key={`${client.name}-${copyOfRow}`} client={client} hidden={copyOfRow} />),
+                [...clients, ...clients].map((client, i) => (
+                  <ClientMark key={`${client.name}-${copyOfRow}-${i}`} client={client} hidden={copyOfRow || i >= clients.length} />
+                )),
               )}
             </ul>
           )}

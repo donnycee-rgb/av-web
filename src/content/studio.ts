@@ -129,17 +129,14 @@ export const milestones: Milestone[] = [
 ];
 
 // Names from the MVP's client list — logo files to be supplied by the owner
+// Logos cleaned from the traced files in src/assets/logos (backgrounds removed, cropped) into public/logos
 export const clients: Client[] = [
-  { name: 'Phoneplace Kenya' },
-  { name: 'TTNT 6 Seasons' },
-  { name: 'Zunguka Africa' },
-  { name: 'FunCity Studios' },
-  { name: 'Gold White Studios' },
-  { name: 'Apex Motion' },
-  { name: 'Horizon Cinema' },
-  { name: 'Luminary Media' },
-  { name: 'Red Print Creatives' },
-  { name: 'E-White Visuals' },
+  { name: 'UTQ', logo: '/logos/utq.svg' },
+  { name: 'Davic DJ', logo: '/logos/davic.svg', tone: 'colour' },
+  { name: 'Grapa Media', logo: '/logos/grapa-media.svg' },
+  { name: 'LE', logo: '/logos/le.svg', tone: 'colour' },
+  { name: 'UTQ Youth Network and OneHope', logo: '/logos/utq-onehope.svg' },
+  { name: 'Nicakai', logo: '/logos/nicakai.svg', tone: 'colour' },
 ];
 
 // Placeholder testimonials from the MVP — replace with real client quotes

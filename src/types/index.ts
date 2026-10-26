@@ -51,6 +51,11 @@ export interface Client {
   name: string;
   /** Path to a logo file in /public — when missing, the name is shown as a wordmark */
   logo?: string;
+  /**
+   * How the logo is shown on the dark logo strip: 'mono' turns it white (for flat wordmarks),
+   * 'colour' keeps its own colours (for emblems and illustrated badges). Default 'mono'.
+   */
+  tone?: 'mono' | 'colour';
 }
 
 export interface Testimonial {

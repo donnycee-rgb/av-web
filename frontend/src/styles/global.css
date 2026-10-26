@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+/*
+ * Brand tokens — the only place colours and fonts are defined.
+ * Tailwind turns each one into utilities, e.g. bg-brand, text-ink, font-display.
+ */
+@theme {
+  /* AV orange (from the logo) */
+  --color-brand: #f58a07;
+  --color-brand-light: #ffa53a;
+  --color-brand-dark: #c96f00;
+
+  /* Deep navy / near-black for the cinematic sections */
+  --color-ink: #0b1220;
+  --color-ink-soft: #131d30;
+  --color-navy: #192c45;
+
+  /* Light sections */
+  --color-paper: #ffffff;
+  --color-mist: #f4f2ee;
+
+  /* Warm near-black of film stock — used for the film strip on project pages */
+  --color-film: #0b0906;
+
+  /* Audio tracks on the Work page timeline (editing apps colour sound differently from picture) */
+  --color-audio: #7cc4e8;
+
+  /* Text greys */
+  --color-muted: #6b7280;
+  --color-muted-dark: #9aa3b2;
+
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Rounded "sheet" sections, as in the design reference */
+  --radius-sheet: 2rem;
+
+  /* Motion — used as animate-rec, animate-kenburns, animate-point, animate-progress, animate-fade-in */
+  --animate-rec: rec 1.2s steps(1, end) infinite;
+  --animate-kenburns: kenburns 6s ease-out forwards;
+  --animate-point: point 2.4s ease-in-out infinite;
+  --animate-progress: progress linear infinite;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-sweep: sweep 0.9s linear forwards;
+  --animate-clap: clap 0.35s ease-out 0.15s;
+
+  @keyframes clap {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes sweep {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes rec {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.15;
+    }
+  }
+
+  @keyframes kenburns {
+    from {
+      transform: scale(1.12) translate(1.5%, 1%);
+    }
+    to {
+      transform: scale(1) translate(0, 0);
+    }
+  }
+
+  @keyframes point {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    50% {
+      transform: translate(6px, -6px) rotate(-6deg);
+    }
+  }
+
+  @keyframes progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    @apply bg-brand text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+}
+
+/* Visitors who turn off animations get a still, readable page */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Camera-iris page transition (View Transitions API; links opt in via components/ui/TransitionLink).
+ * The new page is revealed through a hexagonal aperture that opens from the centre while twisting,
+ * like lens blades; the old page darkens and recedes behind it.
+ */
+::view-transition-old(root) {
+  animation: iris-recede 650ms cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+
+::view-transition-new(root) {
+  animation: iris-open 650ms cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+
+/* The header stays put while the page changes beneath it */
+::view-transition-group(site-header) {
+  z-index: 10;
+}
+
+@keyframes iris-recede {
+  to {
+    transform: scale(0.94);
+    filter: brightness(0.3);
+  }
+}
+
+@keyframes iris-open {
+  from {
+    clip-path: polygon(
+      calc(50% + 1.7vmax) calc(50% - 1vmax),
+      calc(50% + 1.7vmax) calc(50% + 1vmax),
+      50% calc(50% + 2vmax),
+      calc(50% - 1.7vmax) calc(50% + 1vmax),
+      calc(50% - 1.7vmax) calc(50% - 1vmax),
+      50% calc(50% - 2vmax)
+    );
+  }
+  to {
+    clip-path: polygon(
+      calc(50% + 120vmax) 50%,
+      calc(50% + 60vmax) calc(50% + 104vmax),
+      calc(50% - 60vmax) calc(50% + 104vmax),
+      calc(50% - 120vmax) 50%,
+      calc(50% - 60vmax) calc(50% - 104vmax),
+      calc(50% + 60vmax) calc(50% - 104vmax)
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
